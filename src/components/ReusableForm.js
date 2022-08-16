@@ -11,15 +11,8 @@ function ReusableForm(props) {
           placeholder='Paste link here' />
         <input
           type='text'
-          name='name'
-          placeholder='Your Name' />
-        <textarea
-          name='issue'
-          placeholder='wassup.' />
-        <input 
-          type="date"
-          name='timeCreated'> 
-        </input>
+          name='title'
+          placeholder='Title of Post' />
         <button type='submit'>{props.buttonText}</button>
         
       </form>

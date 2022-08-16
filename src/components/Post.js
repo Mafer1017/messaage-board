@@ -7,6 +7,7 @@ function Post(props){
       <div onClick = {() => props.whenTicketClicked(props.id)}>
         <h3>{props.type} - {props.post}</h3>
         <p><em>{props.title}</em></p>
+        <p>{props.timeCreated}</p>
         <hr/>
       </div>
     </React.Fragment>
@@ -17,8 +18,8 @@ Post.propTypes = {
   post: PropTypes.string,
   title: PropTypes.string,
   id: PropTypes.string,
-  whenTicketClicked: PropTypes.func,
-  timeCreated: PropTypes.instanceOf(Date)
+  whenPropClicked: PropTypes.func,
+  timeCreated: PropTypes.string
 };
 
 export default Post;
