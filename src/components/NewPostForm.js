@@ -8,12 +8,12 @@ function NewPostForm(props){
   function handleNewPostFormSubmission(event) {
     event.preventDefault();
     const now = new Date();
-    console.log(now);
     props.onNewPostCreation({
       post: event.target.post.value,
       title: event.target.title.value,
       // timeCreated: now.toString(),
       timeCreated: now.toISOString().split('T')[0],
+      counter: 1,
       id: v4()
     });
   }
