@@ -12,7 +12,7 @@ function EditPostForm (props) {
       post: event.target.post.value,
       title: event.target.title.value,
       timeCreated: now.toISOString().split('T')[0],
-      counter: event.target.counter.value,
+      counter: post.counter,
       id: post.id
     });
   }

@@ -1,16 +1,19 @@
+import { connect } from 'react-redux';
 import React from 'react';
 import NewPostForm from './NewPostForm';
 import PostList from './PostList';
 import PostDetail from './PostDetail';
 import EditPostForm from './EditPostForm';
+import PropTypes from "prop-types";
+
 
 class PostControl extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      formVisibleOnPage: false,
-      mainPostList: [],
+      // formVisibleOnPage: false,
+      // mainPostList: [],
       selectedPost: null,
       editing: false
     };
@@ -20,31 +23,56 @@ class PostControl extends React.Component {
   handleClick = () => {
     if (this.state.selectedPost != null) {
       this.setState({
-        formVisibleOnPage: false,
-        selectedPost: null
+        // formVisibleOnPage: false,
+        selectedPost: null,
+        editing: false
       });
     } else {
-      this.setState(prevState => ({
-        formVisibleOnPage: !prevState.formVisibleOnPage,
-      }));
+      const { dispatch } = this.props;
+      const action = {
+        type: 'TOGGLE_FORM'
+      }
+      dispatch(action);
+      // this.setState(prevState => ({
+      //   formVisibleOnPage: !prevState.formVisibleOnPage,
+      // }));
     }
   }
 
   handleAddingNewPostToList = (newPost) => {
-    const newMainPostList = this.state.mainPostList.concat(newPost);
-    this.setState({mainPostList: newMainPostList,
-                  formVisibleOnPage: false });
+    const { dispatch } = this.props;
+    const { id, title, post, counter, timeCreated } = newPost;
+    const action = {
+      type: 'ADD_POST',
+      id: id,
+      title: title,
+      post: post,
+      counter: counter,
+      timeCreated: timeCreated,
+    }
+    dispatch(action);
+    const action2 = {
+      type: 'TOGGLE_FORM'
+    }
+    dispatch(action2);
+    // this.setState({formVisibleOnPage: false });
   }
 
   handleChangingSelectedPost = (id) => {
-    const selectedPost = this.state.mainPostList.filter(post => post.id === id)[0];
+    const selectedPost = this.props.mainPostList[id];
     this.setState({selectedPost: selectedPost});
   }
   
   handleDeletingPost = (id) => {
-    const newMainPostList = this.state.mainPostList.filter(post => post.id !== id);
+    const { dispatch } = this.props;
+    const action = {
+      type: 'DELETE_POST',
+      id: id
+    }
+    dispatch(action);
+    // const newMainPostList = this.state.mainPostList.filter(post => post.id !== id);
     this.setState({
-      mainPostList: newMainPostList,
+      // mainPostList: newMainPostList,
       selectedPost: null
     });
   }
@@ -54,45 +82,87 @@ class PostControl extends React.Component {
   }
 
   handleEditingPostInList = (postToEdit) => {
-    const editedMainPostList = this.state.mainPostList
-      .filter(post => post.id !== this.state.selectedPost.id)
-      .concat(postToEdit);
+    const { dispatch } = this.props;
+    const { id, title, post, counter, timeCreated } = postToEdit;
+    const action = {
+      type: 'ADD_POST',
+      id: id,
+      title: title,
+      post: post,
+      counter: counter,
+      timeCreated: timeCreated,
+    }
+    dispatch(action);
+    // const editedMainPostList = this.state.mainPostList
+    //   .filter(post => post.id !== this.state.selectedPost.id)
+    //   .concat(postToEdit);
     this.setState({
-        mainPostList: editedMainPostList,
+        // mainPostList: editedMainPostList,
         editing: false,
         selectedPost: null
-      });
+    });
   }
 
-  handleCounterDecreasePost = (id) => {
-    const selectedPost = this.state.mainPostList.filter(
-      (post) => post.id === id)[0];
-      selectedPost.counter -= 1;
-    
-    const editedMainPostList = this.state.mainPostList
-      .filter((post) => post.id !== id)
-      .concat(selectedPost);
 
+  handleCounterDecreasePost = (id) => {
+    const { dispatch } = this.props;
+    // const { counter } = id;
+    const action = {
+      type: 'DOWNVOTE_POST',
+      id: id
+    }
+    dispatch(action);
     this.setState({
-      mainPostList: editedMainPostList,
-      editing: false,
+      // selectedPost: null
     });
   };
 
   handleCounterIncreasePost = (id) => {
-    const selectedPost = this.state.mainPostList.filter(
-      (post) => post.id === id)[0];
-      selectedPost.counter += 1;
-    
-    const editedMainPostList = this.state.mainPostList
-      .filter((post) => post.id !== id)
-      .concat(selectedPost);
-
+    const { dispatch } = this.props;
+    // const { counter } = id;
+    const action = {
+      type: 'UPVOTE_POST',
+      id: id
+    }
+    dispatch(action);
     this.setState({
-      mainPostList: editedMainPostList,
-      editing: false,
+      // selectedPost: null
     });
   };
+
+
+  // handleCounterDecreasePost = (id) => {
+  //   const selectedPost = this.props.mainPostList[id];
+  //   selectedPost.counter -= 1;
+  //   this.setState({selectedPost: selectedPost})
+    
+  //   const editedMainPostList = this.state.mainPostList
+  //     .filter((post) => post.id !== id)
+  //     .concat(selectedPost);
+
+  //   this.setState({
+  //     mainPostList: editedMainPostList,
+  //     editing: false,
+  //   });
+  // };
+
+
+
+
+  // handleCounterIncreasePost = (id) => {
+  //   const selectedPost = this.state.mainPostList.filter(
+  //     (post) => post.id === id)[0];
+  //     selectedPost.counter += 1;
+    
+  //   const editedMainPostList = this.state.mainPostList
+  //     .filter((post) => post.id !== id)
+  //     .concat(selectedPost);
+
+  //   this.setState({
+  //     mainPostList: editedMainPostList,
+  //     editing: false,
+  //   });
+  // };
 
 
   render(){
@@ -111,11 +181,11 @@ class PostControl extends React.Component {
       onClickingUpVote={this.handleCounterIncreasePost}/>
       buttonText = "Return to Post List";
 
-    } else if (this.state.formVisibleOnPage) {
+    } else if (this.props.formVisibleOnPage) {
       currentlyVisibleState = <NewPostForm onNewPostCreation={this.handleAddingNewPostToList}/>;
       buttonText = "Return to Post List";
     } else {
-      currentlyVisibleState = <PostList postList={this.state.mainPostList} onPostSelection={this.handleChangingSelectedPost} />;
+      currentlyVisibleState = <PostList postList={this.props.mainPostList} onPostSelection={this.handleChangingSelectedPost} />;
       buttonText = "Add Post";
     }
     return (
@@ -125,7 +195,20 @@ class PostControl extends React.Component {
       </React.Fragment>
     );
   }
-
 }
+
+PostControl.propTypes = {
+  mainPostList: PropTypes.object,
+  formVisibleOnPage: PropTypes.bool
+};
+
+const mapStateToProps = state => {
+  return {
+    mainPostList: state.mainPostList,
+    formVisibleOnPage: state.formVisibleOnPage
+  }
+}
+
+PostControl = connect(mapStateToProps)(PostControl);
 
 export default PostControl;

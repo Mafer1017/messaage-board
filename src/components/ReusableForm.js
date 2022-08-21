@@ -8,7 +8,7 @@ function ReusableForm(props) {
         <input
           type='text'
           name='post'
-          placeholder='Paste link here' />
+          placeholder='Link URL here' />
         <input
           type='text'
           name='title'
