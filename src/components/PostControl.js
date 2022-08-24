@@ -203,6 +203,7 @@ PostControl.propTypes = {
 };
 
 const mapStateToProps = state => {
+  console.log(state.mainPostList)
   return {
     mainPostList: state.mainPostList,
     formVisibleOnPage: state.formVisibleOnPage

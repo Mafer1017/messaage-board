@@ -6,6 +6,7 @@ function Header(){
     <React.Fragment>
       <h1>Gamer Boiz</h1>
       <img src={headerImage} alt="A leet hacker." />
+      <br></br>
     </React.Fragment>
   );
 }
