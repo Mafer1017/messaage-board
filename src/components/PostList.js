@@ -4,15 +4,17 @@ import Post from "./Post";
 
 
 function PostList(props){
-  for (const [key, value] of Object.entries(props.postList)){
-    console.log(`${key}:${value}`);
-  };
-  let newProps = [props.postList];
-  newProps.sort((a, b)=> {return b.counter - a.counter});
-
+  let newProps = props.postList;
+  let sortedObject = {}
+  sortedObject = Object.keys(newProps).sort((a, b) => {
+                        return newProps[b].counter - newProps[a].counter 
+                    }).reduce((prev, curr, i) => {
+                        prev[i] = newProps[curr]
+                        return prev
+                    }, {});  
   return (
     <React.Fragment>
-      {Object.values(props.postList).map((post) => (
+      {Object.values(sortedObject).map((post) => (
           <Post
             whenPostClicked = { props.onPostSelection }
             post={post.post}
